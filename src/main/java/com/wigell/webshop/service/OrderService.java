@@ -5,38 +5,47 @@ import com.wigell.webshop.model.Receipt;
 import com.wigell.webshop.model.Customer;
 import com.wigell.webshop.model.product.Product;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class OrderService {
-    private static final OrderService instance = new OrderService();
-    private final List<Order> orders;
+    private static OrderService instance;
+    private final Map<Integer, Order> ordersMap;
     private final List<Receipt> receipts;
 
     private OrderService() {
-        orders = new ArrayList<>();
+        ordersMap = new HashMap<>();
         receipts = new ArrayList<>();
     }
 
     public static OrderService getInstance() {
+        if (instance == null) {
+            instance = new OrderService();
+        }
         return instance;
     }
 
+    public void createOrder(Customer customer) {
+        String orderName = generateOrderName(customer);
+        Order newOrder = new Order(customer, orderName);
+        placeOrder(newOrder);
+    }
+
+    public String generateOrderName(Customer customer) {
+        return "Order_" + customer.getName() + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss"));
+    }
+
     public void placeOrder(Order order) {
-        orders.add(order);
+        ordersMap.put(order.getCustomer().getId(), order);
     }
 
     public Order getOrder(Customer customer) {
-        for (Order order : orders) {
-            if (order.getCustomer().getId() == customer.getId()) {
-                return order;
-            }
-        }
-        return null;
+        return ordersMap.get(customer.getId());
     }
 
     public List<Order> getAllOrders() {
-        return orders;
+        return new ArrayList<>(ordersMap.values());
     }
 
     public void addProductToOrder(Order order, Product product) {

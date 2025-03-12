@@ -45,15 +45,19 @@ public class Receipt {
         this.order = order;
     }
 
+
+
     public void printReceipt() {
         System.out.println("----------- RECEIPT -----------");
         System.out.println("Receipt Name: " + name);
         System.out.println("Receipt ID: " + id);
+        System.out.println("Order Name: " + order.getName());
         System.out.println("Order ID: " + order.getId());
         System.out.println("Customer: " + order.getCustomer().getName());
         System.out.println("Address: " + order.getCustomer().getAddress());
         System.out.println("Email: " + order.getCustomer().getMail());
         System.out.println("Order Date: " + order.getOrderDate());
+        System.out.println("-----------------------------");
         System.out.println("Products in the order:");
 
         List<Product> products = order.getProducts();
@@ -83,6 +87,7 @@ public class Receipt {
                 System.out.println("Waistline: " + skirt.getWaistline());
                 System.out.println("Pattern: " + skirt.getPattern());
             }
+            System.out.println("-----------------------------");
         }
 
         double totalPrice = OrderService.getInstance().calculateTotal(order);

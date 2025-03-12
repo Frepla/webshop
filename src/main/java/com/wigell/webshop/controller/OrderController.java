@@ -12,7 +12,8 @@ import com.wigell.webshop.service.OrderService;
 import com.wigell.webshop.model.observer.ProductUpdateNotifier;
 import com.wigell.webshop.model.observer.CEO;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class OrderController {
@@ -25,7 +26,7 @@ public class OrderController {
         this.orderService = OrderService.getInstance();
         this.currentOrder = orderService.getOrder(customer);
         if (this.currentOrder == null) {
-            String orderName = customer.getName() + " - " + LocalDate.now();
+            String orderName = orderService.generateOrderName(customer);
             this.currentOrder = new Order(customer, orderName);
             orderService.placeOrder(currentOrder);
         }
@@ -56,7 +57,6 @@ public class OrderController {
             }
         }
         System.out.println("\nThank you for your order! Generating receipt...");
-        System.out.println();
         sleepWithHandling();
         clearScreen();
         printReceipt();
@@ -165,7 +165,7 @@ public class OrderController {
         Receipt existingReceipt = orderService.getReceiptForOrder(currentOrder);
 
         if (existingReceipt == null) {
-            String receiptName = "Receipt_" + currentOrder.getCustomer().getName() + "_" + currentOrder.getId();
+            String receiptName = "Receipt_" + currentOrder.getCustomer().getName() + "_" + currentOrder.getId() + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
             existingReceipt = new Receipt(receiptName, currentOrder);
             orderService.addReceipt(existingReceipt);
         }
@@ -189,7 +189,7 @@ public class OrderController {
 
     private void sleepWithHandling() {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1500);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

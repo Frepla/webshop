@@ -46,6 +46,8 @@ public class Customer {
         this.mail = mail;
     }
 
+
+
     @Override
     public String toString() {
         return "Customer{" +

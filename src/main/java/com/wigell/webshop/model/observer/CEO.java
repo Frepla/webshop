@@ -16,7 +16,7 @@ public class CEO implements Observer {
 
     @Override
     public void update(String message) {
-        System.out.println("<< Message sent to " + name + " (CEO): " + message + ">>");
+        System.out.println("<< Message sent to " + name + " (CEO): " + message + " >>");
     }
 
     public String getName() {

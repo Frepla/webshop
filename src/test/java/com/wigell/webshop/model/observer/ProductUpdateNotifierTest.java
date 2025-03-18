@@ -12,7 +12,7 @@ class ProductUpdateNotifierTest {
 
     @BeforeEach
     void setUp() {
-        notifier = new ProductUpdateNotifier();
+        notifier = ProductUpdateNotifier.getInstance();
         observer = mock(Observer.class);
     }
 

@@ -1,17 +1,29 @@
 package com.wigell.webshop.model.observer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ProductUpdateNotifier {
-    private List<Observer> observers = new ArrayList<>();
+    private static ProductUpdateNotifier instance;
+    private Set<Observer> observers = new HashSet<>();
+
+    private ProductUpdateNotifier() {
+        CEO ceo = new CEO("Wigell");
+        addObserver(ceo);
+    }
+
+    public static ProductUpdateNotifier getInstance() {
+        if (instance == null) {
+            instance = new ProductUpdateNotifier();
+        }
+        return instance;
+    }
 
     public void addObserver(Observer observer) {
-        if (!observers.contains(observer)) {
+        if (observer != null) {
             observers.add(observer);
         }
     }
-
 
     public void notifyObservers(String message) {
         for (Observer observer : observers) {

@@ -1,5 +1,6 @@
 package com.wigell.webshop.model.order;
 
+import com.wigell.webshop.command.Command;
 import com.wigell.webshop.model.Customer;
 import com.wigell.webshop.model.product.Product;
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ public class Order {
     private String name;
     private Customer customer;
     private List<Product> products;
+    private List<Command> commands;
     private final LocalDate orderDate;
     private boolean isCompleted;
 
@@ -30,10 +32,6 @@ public class Order {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        throw new UnsupportedOperationException("ID cannot be modified.");
     }
 
     public String getName() {

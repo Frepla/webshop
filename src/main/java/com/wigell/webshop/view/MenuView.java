@@ -120,14 +120,15 @@ public class MenuView {
             choice = scanner.nextInt();
             scanner.nextLine();
 
-            if (choice < 1 || choice > receipts.size()) {
+            if (choice < 1 || choice > orders.size()) {
                 System.out.println("Invalid choice. Please try again.");
             } else {
                 validChoice = true;
             }
         }
 
-        Receipt selectedReceipt = receipts.get(choice - 1);
+        Order selectedOrder = orders.get(choice - 1);
+        Receipt selectedReceipt = orderService.getReceiptForOrder(selectedOrder);
         selectedReceipt.printReceipt();
     }
 

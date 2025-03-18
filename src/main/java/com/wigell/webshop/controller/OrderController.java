@@ -10,7 +10,6 @@ import com.wigell.webshop.command.*;
 import com.wigell.webshop.model.Receipt;
 import com.wigell.webshop.service.OrderService;
 import com.wigell.webshop.model.observer.ProductUpdateNotifier;
-import com.wigell.webshop.model.observer.CEO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,6 +20,7 @@ public class OrderController {
     private Order currentOrder;
     private final OrderService orderService;
     private final ProductUpdateNotifier productUpdateNotifier;
+    private final CommandPipeline commandPipeline;
 
     public OrderController(Customer customer) {
         this.orderService = OrderService.getInstance();
@@ -31,9 +31,9 @@ public class OrderController {
             orderService.placeOrder(currentOrder);
         }
 
-        this.productUpdateNotifier = new ProductUpdateNotifier();
-        CEO ceo = new CEO("Wigell");
-        productUpdateNotifier.addObserver(ceo);
+        this.productUpdateNotifier = ProductUpdateNotifier.getInstance();
+
+        this.commandPipeline = new CommandPipeline();
     }
 
     public void addProductsToOrder() {
@@ -54,8 +54,11 @@ public class OrderController {
                 addMoreProducts = false;
             } else {
                 processProductChoice(productChoice);
+                System.out.println("Product was added to the order");
             }
         }
+        commandPipeline.execute();
+        sleepWithHandling();
         System.out.println("\nThank you for your order! Generating receipt...");
         sleepWithHandling();
         clearScreen();
@@ -80,8 +83,6 @@ public class OrderController {
             default:
                 System.out.println("Invalid product choice.");
         }
-
-        System.out.println("Product added to your order.");
     }
 
     private void processPants(String size, String material, String color) {
@@ -99,11 +100,8 @@ public class OrderController {
 
         orderService.addProductToOrder(currentOrder, pants);
 
-        Command pantsCommand = new PantsCommand(fit, length);
-        pantsCommand.execute(pants);
-
-        productUpdateNotifier.productReady("Pants.");
-        sleepWithHandling();
+        Command pantsCommand = new PantsCommand(pants, fit, length);
+        commandPipeline.addCommand(pantsCommand);
     }
 
     private void processTShirt(String size, String material, String color) {
@@ -121,11 +119,8 @@ public class OrderController {
 
         orderService.addProductToOrder(currentOrder, tShirt);
 
-        Command tShirtCommand = new TShirtCommand(sleeves, neck);
-        tShirtCommand.execute(tShirt);
-
-        productUpdateNotifier.productReady("TShirt");
-        sleepWithHandling();
+        Command tShirtCommand = new TShirtCommand(tShirt, sleeves, neck);
+        commandPipeline.addCommand(tShirtCommand);
     }
 
     private void processSkirt(String size, String material, String color) {
@@ -143,11 +138,8 @@ public class OrderController {
 
         orderService.addProductToOrder(currentOrder, skirt);
 
-        Command skirtCommand = new SkirtCommand(waistline, pattern);
-        skirtCommand.execute(skirt);
-
-        productUpdateNotifier.productReady("Skirt");
-        sleepWithHandling();
+        Command skirtCommand = new SkirtCommand(skirt, waistline, pattern);
+        commandPipeline.addCommand(skirtCommand);
     }
 
     private String getProductInput(String prompt, int min, int max, String[] options) {

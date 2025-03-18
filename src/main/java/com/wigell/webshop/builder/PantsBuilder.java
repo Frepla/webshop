@@ -3,7 +3,7 @@ package com.wigell.webshop.builder;
 import com.wigell.webshop.model.product.Pants;
 
 public class PantsBuilder {
-    private Pants pants = new Pants();
+    private final Pants pants = new Pants();
 
     public PantsBuilder() {
     }

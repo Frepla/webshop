@@ -3,7 +3,7 @@ package com.wigell.webshop.builder;
 import com.wigell.webshop.model.product.TShirt;
 
 public class TShirtBuilder {
-    private TShirt tShirt = new TShirt();
+    private final TShirt tShirt = new TShirt();
 
     public TShirtBuilder() {
     }

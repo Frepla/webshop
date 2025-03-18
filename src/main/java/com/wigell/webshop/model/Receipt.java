@@ -59,6 +59,7 @@ public class Receipt {
         System.out.println("Order Date: " + order.getOrderDate());
         System.out.println("-----------------------------");
         System.out.println("Products in the order:");
+        System.out.println("-----------------------------");
 
         List<Product> products = order.getProducts();
         for (Product product : products) {

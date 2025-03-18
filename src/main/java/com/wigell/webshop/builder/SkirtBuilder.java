@@ -3,7 +3,7 @@ package com.wigell.webshop.builder;
 import com.wigell.webshop.model.product.Skirt;
 
 public class SkirtBuilder {
-    private Skirt skirt = new Skirt();
+    private final Skirt skirt = new Skirt();
 
     public SkirtBuilder() {
     }
